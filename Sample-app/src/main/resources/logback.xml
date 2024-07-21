@@ -1,0 +1,41 @@
+<configuration>
+
+    <if condition='property("LOGGER_MODE_STDOUT").contains("true")'>
+        <then>
+            <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+                </encoder>
+            </appender>
+            <root level="debug">
+                <appender-ref ref="STDOUT"/>
+            </root>
+        </then>
+    </if>
+
+    <if condition='property("LOGGER_MODE_FILE").contains("true")'>
+        <then>
+            <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+                <encoder class="ch.qos.logback.classic.encoder.JsonEncoder"/>
+                <file>foo.json</file>
+            </appender>
+            <root level="debug">
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+    </if>
+
+    <if condition='property("LOGGER_MODE_KAFKA").contains("true")'>
+        <then>
+            <appender name="KAFKA" class="pl.mikbac.KafkaAppender">
+                <kafkaBrokers>localhost:9192</kafkaBrokers>
+                <kafkaTopic>demo_logs2</kafkaTopic>
+                <kafkaClientId>test_client</kafkaClientId>
+            </appender>
+            <root level="warn"> <!-- kafka appender can't use "info" level because it tries to log itself -->
+                <appender-ref ref="KAFKA"/>
+            </root>
+        </then>
+    </if>
+
+</configuration>

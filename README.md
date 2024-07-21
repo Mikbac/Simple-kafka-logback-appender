@@ -1,0 +1,1 @@
+# Simple kafka logback appender
